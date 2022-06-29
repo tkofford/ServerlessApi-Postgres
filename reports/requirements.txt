@@ -1,7 +1,0 @@
-requests
-ujson
-aws-psycopg2
-dnspython
-marshmallow
-pyjwt
-pytest

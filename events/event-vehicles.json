@@ -1,0 +1,32 @@
+{
+  "body": null,
+  "resource": "/cvms/customers/{id}",
+  "path": "/cvms/customers/2",
+  "httpMethod": "GET",
+  "eventType": "customers",
+  "queryStringParameters": null,
+  "multiValueQueryStringParameters": null,
+  "pathParameters": {
+      "id": 2
+  },
+  "stageVariables": null,
+  "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, br",
+      "Accept-Language": "en-US,en;q=0.8",
+      "Cache-Control": "max-age=0"
+  },
+  "multiValueHeaders": {
+      "Accept": [
+          "*/*"
+      ],
+      "Accept-Encoding": [
+          "gzip, deflate, br"
+      ]
+  },
+  "requestContext": {
+      "resourceId": 2,
+      "resourcePath": "/cvms/vehicles/{id}",
+      "httpMethod": "GET"
+  }
+}

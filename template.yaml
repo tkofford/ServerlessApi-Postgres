@@ -1,9 +1,9 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  ServerlessApi-Sql
+  NGSL API
 
-  Sample SAM Template for ServerlessApi-Sql
+  Next Generation Service Layer for the EFM Enterprise Data Warehouse
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
@@ -12,105 +12,39 @@ Globals:
     MemorySize: 2048
 
 Resources:
-  ToDoItemsRead:
+  CustomersReadById:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: reports/
+      CodeUri: cvms/
       Handler: app.lambda_handler
       Runtime: python3.8
       Architectures:
         - x86_64
       Events:
-        ToDoItemsGetAPI:
+        CustomersGetByIdAPI:
           Type: Api
           Properties:
-            Path: /reports/todoitems
+            Path: /cvms/customers/{id}
             Method: GET
             Auth:
               Authorizer: NONE
 
-  ToDoItemsReadById:
+  VehiclesReadById:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: reports/
+      CodeUri: cvms/
       Handler: app.lambda_handler
       Runtime: python3.8
       Architectures:
         - x86_64
       Events:
-        ToDoItemsGetAPI:
+        VehiclesGetByIdAPI:
           Type: Api
           Properties:
-            Path: /reports/todoitems/{Id}
+            Path: /cvms/vehicles/{id}
             Method: GET
+            RequestParameters:
+                - method.request.querystring.idtype:
+                     Required: true
             Auth:
               Authorizer: NONE
-
-  LocationsRead:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: reports/
-      Handler: app.lambda_handler
-      Runtime: python3.8
-      Architectures:
-        - x86_64
-      Events:
-        ToDoItemsGetAPI:
-          Type: Api
-          Properties:
-            Path: /reports/locations
-            Method: GET
-            Auth:
-              Authorizer: NONE
-
-  LocationsReadById:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: reports/
-      Handler: app.lambda_handler
-      Runtime: python3.8
-      Architectures:
-        - x86_64
-      Events:
-        ToDoItemsGetAPI:
-          Type: Api
-          Properties:
-            Path: /reports/locations/{Id}
-            Method: GET
-            Auth:
-              Authorizer: NONE
-
-  UsersRead:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: reports/
-      Handler: app.lambda_handler
-      Runtime: python3.8
-      Architectures:
-        - x86_64
-      Events:
-        ToDoItemsGetAPI:
-          Type: Api
-          Properties:
-            Path: /reports/users
-            Method: GET
-            Auth:
-              Authorizer: NONE
-
-  UsersReadById:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: reports/
-      Handler: app.lambda_handler
-      Runtime: python3.8
-      Architectures:
-        - x86_64
-      Events:
-        ToDoItemsGetAPI:
-          Type: Api
-          Properties:
-            Path: /reports/users/{Id}
-            Method: GET
-            Auth:
-              Authorizer: NONE
-

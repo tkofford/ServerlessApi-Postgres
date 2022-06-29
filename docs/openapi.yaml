@@ -1,0 +1,406 @@
+openapi: 3.0.0
+info:
+  description: |
+    You can find out more about Swagger at
+    [http://swagger.io](http://swagger.io) or on
+    [irc.freenode.net, #swagger](http://swagger.io/irc/).
+  version: 1.0.0-oas3
+  title: Swagger EDW API
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+tags:
+  - name: cvms
+    description: Everything about your EFM Vehicles
+    externalDocs:
+      description: Find out more
+      url: http://swagger.io
+paths:
+  /cvms/customers/{customerId}:
+    get:
+      tags:
+        - cvms
+      summary: Find customer by ID
+      description: Returns a single customer snapshot
+      operationId: getCustomerById
+      parameters:
+        - name: id
+          in: path
+          description: ID of customer to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: month
+          description: The month number to filter the result by
+          schema:
+            type: integer
+        - in: query
+          name: group
+          description: The group to filter the result by
+          schema:
+            type: string
+        - in: query
+          name: branch
+          description: The branch to filter the result by
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleSnapshot'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/VehicleSnapshot'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Customer not found
+      security:
+        - api_key: []
+  /cvms/vehicles/{id}:
+    get:
+      tags:
+        - cvms
+      summary: Finds Vehicle by ID (vehicleId, unitId, VIN)
+      description: Multiple status values can be provided with comma separated strings
+      operationId: getVehicleById
+      parameters:
+        - name: id
+          in: path
+          description: ID of vehicle to return
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: idtype
+          required: true
+          schema:
+            type: string
+            enum: [vehicleId, unitId, quoteId, vin]
+          description: >
+            Vehicle ID Type:
+             * `vehicleId` - Internal EFM vehicle ID
+             * `unitId` - EFM vehicle unit ID
+             * `quoteId` - EFM vehicle quote ID
+             * `vin` - Vehicle Identification Number (VIN) 
+        - in: query
+          name: month
+          description: The month number to filter the result by
+          schema:
+            type: integer
+        - in: query
+          name: group
+          description: The group to filter the result by
+          schema:
+            type: string
+        - in: query
+          name: branch
+          description: The branch to filter the result by
+          schema:
+            type: string
+        - in: query
+          name: fleetstatus
+          schema:
+            type: array
+            items:
+              type: string
+              enum: [status1, status2, status3, status4]
+          description: >
+            Fleet status values to filter the result by:
+             * `status1` - status1
+             * `status2` - status2
+             * `status3` - status3
+             * `status4` - status4
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VehicleSnapshot'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VehicleSnapshot'
+        '400':
+          description: Invalid status value
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: https://virtserver.swaggerhub.com/EFM/edw/1.0.0
+  - url: http://virtserver.swaggerhub.com/EFM/edw/1.0.0
+components:
+  securitySchemes:
+    petstore_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: http://petstore.swagger.io/oauth/dialog
+          scopes:
+            write:pets: modify pets in your account
+            read:pets: read your pets
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+    VehicleSnapshot:
+      type: object
+      properties:
+        PER_NAME_MONTH:
+          type: string
+        MONTHLY_SNAPSHOT_DATE_WID:
+          type: string
+        GROUP_ID:
+          type: string
+        BRANCH_ID:
+          type: string
+        EDGE_CUSTOMER_NUMBER:
+          type: string
+        CUSTOMER_NAME:
+          type: string
+        MASTER_CUSTOMER_NUMBER:
+          type: string
+        MASTER_COMPANY_NAME:
+          type: string
+        CUSTOMER_SINCE_DT:
+          type: string
+        CUSTOMER_TYPE_DESCR:
+          type: string
+        LEASE_TYPE_DESCR:
+          type: string
+        QUOTE_NUMBER:
+          type: string
+        UNIT_NUMBER:
+          type: string
+        LEASE_TERM:
+          type: string
+        LIABILITY_INSURANCE_FLG:
+          type: string
+        PHYSICAL_DAMAGE_FLG:
+          type: string
+        TELEMATICS_FLG:
+          type: string
+        MAINTENANCE_MANAGEMENT_FLG:
+          type: string
+        CUSTOM_MAINTENANCE_FLG:
+          type: string
+        FULL_MAINTENANCE_FLG:
+          type: string
+        AME_FLAG:
+          type: string
+        FUEL_CARD_ID:
+          type: string
+        ALTERNATE_DRIVER_FLG:
+          type: string
+        DRIVER_TYPE:
+          type: integer
+        DRIVER_CONTACT_ID:
+          type: integer
+        DRIVER_NAME:
+          type: string
+        DRIVER_EMAIL:
+          type: string
+        DRIVER_CELL_PHONE:
+          type: string
+        GARAGE_STREET_ADDRESS_1:
+          type: string
+        GARAGE_STREET_ADDRESS_2:
+          type: string
+        GARAGE_STREET_ADDRESS_3:
+          type: string
+        GARAGE_STREET_ADDRESS_4:
+          type: string
+        GARAGE_CITY:
+          type: string
+        GARAGE_COUNTY_NAME:
+          type: string
+        GARAGE_STATE_PROV:
+          type: string
+        GARAGE_POSTAL_CODE:
+          type: string
+        GARAGE_COUNTRY:
+          type: string
+        MAINT_CARD_COST_CODE:
+          type: string
+        CONTRACT_MILEAGE:
+          type: integer
+        STARTING_MILEAGE:
+          type: integer
+        PURCHASE_METHOD:
+          type: string
+        VEHICLE_ORDER_STATUS:
+          type: string
+        DEPRECIATION_PERCENTAGE:
+          type: integer
+        POOL_CAR_IND:
+          type: string
+        CUSTOMER_VEHICLE_CATEGORY:
+          type: string
+        LEASE_EXPIRATION_DT:
+          type: string
+        EXTERIOR_COLOR:
+          type: string
+        INTERIOR_COLOR:
+          type: string
+        USER_ENTERED_EXP_ANNUAL_MILES:
+          type: integer
+        VEHICLE_ID:
+          type: integer
+        FLEET_STATUS:
+          type: string
+        REPORTING_FLEET_STATUS:
+          type: string
+        REPORTING_FLEET_STATUS_DESCR:
+          type: string
+        MODEL_YEAR:
+          type: integer
+        MAKE_DESCR:
+          type: string
+        MODEL_DESCR:
+          type: string
+        SERIES_DESCR:
+          type: string
+        VEH_TYPE_NAME:
+          type: string
+        CUSTOMER_VEHICLE_ID:
+          type: string
+        VIN:
+          type: string
+        LICENSE_PLATE_NUMBER:
+          type: string
+        LICENSE_PLATE_STATE:
+          type: string
+        LICENSE_PLATE_EXPIRATION_DT:
+          type: string
+        GROSS_VEH_WEIGHT:
+          type: integer
+        GVWR:
+          type: integer
+        HORSEPOWER:
+          type: integer
+        DRIVE_TRAIN:
+          type: string
+        STYLE_NAME:
+          type: string
+        NUM_OF_CYLINDERS:
+          type: integer
+        CYLINDER_CONFIG:
+          type: string
+        TRANSMISSION:
+          type: string
+        FUEL_TYPE:
+          type: string
+        VEHICLE_CLASS_DESCR:
+          type: string
+        STATUS_LONG_DESCR:
+          type: string
+        STATUS_SHORT_DESCR:
+          type: string
+        LEASE_ACTIVE_FLAG:
+          type: string
+        AE_EMPLOYEE_DISPLAY_NAME:
+          type: string
+        AE_EMPLOYEE_EID:
+          type: string
+        AE_EMPLOYEE_EMAIL:
+          type: string
+        AM_EMPLOYEE_DISPLAY_NAME:
+          type: string
+        AM_EMPLOYEE_EID:
+          type: string
+        AM_EMPLOYEE_EMAIL:
+          type: string
+        EFF_APPRVD_QUOTE_DATE:
+          type: string
+        EFF_ACTVTN_QUOTE_DATE:
+          type: string
+        DELIVERY_QUOTE_DATE:
+          type: string
+        MONTHS_IN_SERVICE:
+          type: string
+        ACCUMULATED_PROP_TAX_AMT:
+          type: string
+        CURRENT_RBV:
+          type: string
+        DELIVERED_PRICE:
+          type: string
+        FM_ADMIN_FEE:
+          type: string
+        FM_MARKUP_DOWN:
+          type: string
+        FM_SERVICE_SUB_TOTAL:
+          type: string
+        LAST_KNOWN_MILEAGE:
+          type: string
+        LAST_KNOWN_MILEAGE_DATE:
+          type: string
+        LIC_FEE_AMT:
+          type: integer
+        LUX_TAX_AMT:
+          type: integer
+        MNTHLY_DEPRECIATION_AMT:
+          type: integer
+        MNTHLY_INT_ADJSTMNT_AMT:
+          type: integer
+        MNTHLY_INTEREST_AMT:
+          type: integer
+        MNTHLY_MANAGEMENT_FEE:
+          type: integer
+        MNTHLY_USE_TAX_AMT:
+          type: integer
+        SERVICE_CHARGE:
+          type: integer
+        TOTAL_MNTHLY_RENT:
+          type: integer
+        MONTHLY_TOTAL_LEASE_CHARGE:
+          type: integer
+        LICENSE_AND_TAX_AMT:
+          type: integer
+        FM_MONTHLY_AMT:
+          type: integer
+        LICENSE_ADMIN_MONTHLY_CHARGE:
+          type: integer
+        PROJECTED_CURRENT_MILEAGE:
+          type: integer
+        ODOMETER_DIFF_12MO:
+          type: integer
+        ODOMETER_DIFF_YAGO_12MO:
+          type: integer
+        MAINT_AMT_12MO:
+          type: integer
+        CUST_MAINT_AMT_12MO:
+          type: integer
+        LTD_MAINT_AMT:
+          type: integer
+        LTD_CUST_MAINT_AMT:
+          type: integer
+        LICENSE_ADMINISTRATION_FLG:
+          type: string
+      description: Snapshot of vehicle data
